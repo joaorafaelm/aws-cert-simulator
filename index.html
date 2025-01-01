@@ -209,7 +209,29 @@
                 clearHistoryButton.classList.add('hidden');
             }
 
-            historyContainer.innerHTML = '<h2>Answer History</h2>';
+            let correctCount = 0;
+            let incorrectCount = 0;
+
+            history.forEach(entry => {
+                entry.options.forEach((option, i) => {
+                    if (option.correct && entry.selectedOptions.includes(i)) {
+                        correctCount++;
+                    } else if (!option.correct && entry.selectedOptions.includes(i)) {
+                        incorrectCount++;
+                    }
+                });
+            });
+
+            const totalAnswers = correctCount + incorrectCount;
+            const correctRatio = totalAnswers > 0 ? (correctCount / totalAnswers * 100).toFixed(2) : 0;
+            const incorrectRatio = totalAnswers > 0 ? (incorrectCount / totalAnswers * 100).toFixed(2) : 0;
+
+            historyContainer.innerHTML = `
+                <h2>Answer History</h2>
+                <p>Correct Answers: ${correctCount} (${correctRatio}%)</p>
+                <p>Incorrect Answers: ${incorrectCount} (${incorrectRatio}%)</p>
+            `;
+
             history.forEach((entry, index) => {
                 const entryElement = document.createElement('div');
                 entryElement.innerHTML = `
