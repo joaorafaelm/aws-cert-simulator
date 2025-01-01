@@ -69,6 +69,10 @@
             padding-left: 10px;
         }
 
+        .hidden {
+            display: none;
+        }
+
         @media (max-width: 600px) {
             h1 {
                 font-size: 1.5em;
@@ -97,7 +101,7 @@
         <option value="en">English</option>
     </select>
     <button onclick="loadQuestion()">Load Question</button>
-    <div id="question-container"></div>
+    <div id="question-container" class="hidden"></div>
     <div id="result-container"></div>
 
     <script>
@@ -122,6 +126,7 @@
 
         function displayQuestion(question) {
             const container = document.getElementById('question-container');
+            container.classList.remove('hidden');
             container.innerHTML = `
                 <h2>${question.question}</h2>
                 <ul>
