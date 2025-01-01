@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random AWS cert question</title>
+    <style>
+        .correct {
+            background-color: #d4edda;
+        }
+        .incorrect {
+            background-color: #f8d7da;
+        }
+    </style>
+</head>
+<body>
+    <h1>Random Question</h1>
+    <label for="category">Category:</label>
+    <select id="category">
+        <option value="practitioner">Practitioner</option>
+        <option value="archAssociate">Arch Associate</option>
+    </select>
+    <label for="language">Language:</label>
+    <select id="language">
+        <option value="pt">Portuguese</option>
+        <option value="en">English</option>
+    </select>
+    <button onclick="loadQuestion()">Load Question</button>
+    <div id="question-container"></div>
+    <div id="result-container"></div>
+
+    <script>
+        let currentQuestion = null;
+
+        async function loadQuestion() {
+            const category = document.getElementById('category').value;
+            const language = document.getElementById('language').value;
+
+            try {
+                const response = await fetch('questions.json');
+                const data = await response.json();
+                const questions = data[category][language];
+                const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
+
+                currentQuestion = randomQuestion;
+                displayQuestion(randomQuestion);
+            } catch (error) {
+                console.error('Error loading questions:', error);
+            }
+        }
+
+        function displayQuestion(question) {
+            const container = document.getElementById('question-container');
+            container.innerHTML = `
+                <h2>${question.question}</h2>
+                <ul>
+                    ${question.options.map((option, index) => `
+                        <li>
+                            <input type="checkbox" name="option" id="option${index}" value="${index}">
+                            <label for="option${index}">${option.option}</label>
+                        </li>
+                    `).join('')}
+                </ul>
+                <button onclick="checkAnswer()">Submit Answer</button>
+            `;
+        }
+
+        function checkAnswer() {
+            const selectedOptions = Array.from(document.querySelectorAll('input[name="option"]:checked')).map(input => parseInt(input.value));
+            const resultContainer = document.getElementById('result-container');
+            resultContainer.innerHTML = '';
+
+            currentQuestion.options.forEach((option, index) => {
+                const optionElement = document.getElementById(`option${index}`).parentElement;
+                if (option.correct) {
+                    optionElement.classList.add('correct');
+                } else if (selectedOptions.includes(index)) {
+                    optionElement.classList.add('incorrect');
+                }
+
+                const message = document.createElement('p');
+                message.textContent = option.message;
+                optionElement.appendChild(message);
+            });
+        }
+    </script>
+</body>
+</html>
