@@ -73,6 +73,16 @@
             display: none;
         }
 
+        #history-container {
+            width: 90%;
+            max-width: 600px;
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
         @media (max-width: 600px) {
             h1 {
                 font-size: 1.5em;
@@ -82,7 +92,7 @@
                 font-size: 0.9em;
             }
 
-            #question-container {
+            #question-container, #history-container {
                 padding: 15px;
             }
         }
@@ -103,9 +113,14 @@
     <button onclick="loadQuestion()">Load Question</button>
     <div id="question-container" class="hidden"></div>
     <div id="result-container"></div>
+    <button id="show-history-button" class="hidden" onclick="toggleHistory()">Show History</button>
+    <button id="clear-history-button" class="hidden" onclick="clearHistory()">Clear History</button>
+    <div id="history-container" class="hidden"></div>
 
     <script>
         let currentQuestion = null;
+
+        document.addEventListener('DOMContentLoaded', displayHistory);
 
         async function loadQuestion() {
             const category = document.getElementById('category').value;
@@ -146,6 +161,12 @@
             const resultContainer = document.getElementById('result-container');
             resultContainer.innerHTML = '';
 
+            const answerData = {
+                question: currentQuestion.question,
+                selectedOptions: selectedOptions,
+                options: currentQuestion.options
+            };
+
             currentQuestion.options.forEach((option, index) => {
                 const optionElement = document.getElementById(`option${index}`).parentElement;
                 if (option.correct) {
@@ -159,9 +180,66 @@
                 optionElement.appendChild(message);
             });
 
+            saveAnswerToHistory(answerData);
+
             const submitButton = document.getElementById('submit-button');
             submitButton.textContent = 'Next Question';
             submitButton.onclick = loadQuestion;
+        }
+
+        function saveAnswerToHistory(answerData) {
+            let history = JSON.parse(localStorage.getItem('answerHistory')) || [];
+            history.push(answerData);
+            localStorage.setItem('answerHistory', JSON.stringify(history));
+            displayHistory();
+        }
+
+        function displayHistory() {
+            const historyContainer = document.getElementById('history-container');
+            const history = JSON.parse(localStorage.getItem('answerHistory')) || [];
+
+            const showHistoryButton = document.getElementById('show-history-button');
+            const clearHistoryButton = document.getElementById('clear-history-button');
+
+            if (history.length > 0) {
+                showHistoryButton.classList.remove('hidden');
+                clearHistoryButton.classList.remove('hidden');
+            } else {
+                showHistoryButton.classList.add('hidden');
+                clearHistoryButton.classList.add('hidden');
+            }
+
+            historyContainer.innerHTML = '<h2>Answer History</h2>';
+            history.forEach((entry, index) => {
+                const entryElement = document.createElement('div');
+                entryElement.innerHTML = `
+                    <h3>Question ${index + 1}: ${entry.question}</h3>
+                    <ul>
+                        ${entry.options.map((option, i) => `
+                            <li class="${option.correct ? 'correct' : (entry.selectedOptions.includes(i) ? 'incorrect' : '')}">
+                                ${option.option} - ${option.message}
+                            </li>
+                        `).join('')}
+                    </ul>
+                `;
+                historyContainer.appendChild(entryElement);
+            });
+        }
+
+        function toggleHistory() {
+            const historyContainer = document.getElementById('history-container');
+            if (historyContainer.classList.contains('hidden')) {
+                historyContainer.classList.remove('hidden');
+            } else {
+                historyContainer.classList.add('hidden');
+            }
+        }
+
+        function clearHistory() {
+            localStorage.removeItem('answerHistory');
+            displayHistory();
+            const historyContainer = document.getElementById('history-container');
+            historyContainer.classList.add('hidden');
         }
     </script>
 </body>

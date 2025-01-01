@@ -11122,7 +11122,7 @@
                 "question": "Quais das opções abaixo são formas de pagamento de instâncias EC2? (Selecione 3 alternativas)",
                 "options": [
                     {
-                        "e": "Tailor Made (Sob demanda)",
+                        "option": "Tailor Made (Sob demanda)",
                         "correct": false,
                         "message": "Incorreto. Tailor Made não é uma opção válida para pagamento de instâncias EC2."
                     },
