@@ -110,7 +110,6 @@
         <option value="pt">Portuguese</option>
         <option value="en">English</option>
     </select>
-    <button onclick="loadQuestion()">Load Question</button>
     <div id="question-container" class="hidden"></div>
     <div id="result-container"></div>
     <button id="show-history-button" class="hidden" onclick="toggleHistory()">Show History</button>
@@ -120,7 +119,10 @@
     <script>
         let currentQuestion = null;
 
-        document.addEventListener('DOMContentLoaded', displayHistory);
+        document.addEventListener('DOMContentLoaded', () => {
+            displayHistory();
+            loadQuestion();
+        });
 
         async function loadQuestion() {
             const category = document.getElementById('category').value;
