@@ -101,12 +101,12 @@
 <body>
     <h1>Random AWS Cert Question</h1>
     <label for="category">Category:</label>
-    <select id="category">
+    <select id="category" onchange="savePreferences()">
         <option value="practitioner">Practitioner</option>
         <option value="archAssociate">Arch Associate</option>
     </select>
     <label for="language">Language:</label>
-    <select id="language">
+    <select id="language" onchange="savePreferences()">
         <option value="pt">Portuguese</option>
         <option value="en">English</option>
     </select>
@@ -120,9 +120,28 @@
         let currentQuestion = null;
 
         document.addEventListener('DOMContentLoaded', () => {
+            loadPreferences();
             displayHistory();
             loadQuestion();
         });
+
+        function savePreferences() {
+            const category = document.getElementById('category').value;
+            const language = document.getElementById('language').value;
+            localStorage.setItem('selectedCategory', category);
+            localStorage.setItem('selectedLanguage', language);
+        }
+
+        function loadPreferences() {
+            const savedCategory = localStorage.getItem('selectedCategory');
+            const savedLanguage = localStorage.getItem('selectedLanguage');
+            if (savedCategory) {
+                document.getElementById('category').value = savedCategory;
+            }
+            if (savedLanguage) {
+                document.getElementById('language').value = savedLanguage;
+            }
+        }
 
         async function loadQuestion() {
             const category = document.getElementById('category').value;
