@@ -147,6 +147,7 @@
             const language = document.getElementById('language').value;
             localStorage.setItem('selectedCategory', category);
             localStorage.setItem('selectedLanguage', language);
+            loadQuestion();
         }
 
         function loadPreferences() {
