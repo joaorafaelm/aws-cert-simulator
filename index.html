@@ -101,12 +101,12 @@
 <body>
     <h1>Random AWS Cert Question</h1>
     <label for="category">Category:</label>
-    <select id="category" onchange="savePreferences()">
+    <select id="category" onchange="savePreferences();">
         <option value="practitioner">Practitioner</option>
         <option value="archAssociate">Arch Associate</option>
     </select>
     <label for="language">Language:</label>
-    <select id="language" onchange="savePreferences()">
+    <select id="language" onchange="savePreferences();">
         <option value="pt">Portuguese</option>
         <option value="en">English</option>
     </select>
@@ -130,6 +130,7 @@
             const language = document.getElementById('language').value;
             localStorage.setItem('selectedCategory', category);
             localStorage.setItem('selectedLanguage', language);
+            loadQuestion();
         }
 
         function loadPreferences() {
