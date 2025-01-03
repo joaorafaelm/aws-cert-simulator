@@ -8079,7 +8079,7 @@
                 ]
             },
             {
-                "question": "Incorreto Sua empresa precisa executar centenas de batch para atualizar diversas informações dos seus clientes sem ter a dimensão dos recursos tecnológicos que precisará utilizar, qual é a melhor solução a ser utilizada?",
+                "question": "Sua empresa precisa executar centenas de batch para atualizar diversas informações dos seus clientes sem ter a dimensão dos recursos tecnológicos que precisará utilizar, qual é a melhor solução a ser utilizada?",
                 "options": [
                     {
                         "option": "AWS Batch",
@@ -14379,7 +14379,7 @@
                 ]
             },
             {
-                "question": "Qual opção é uma responsabilidade do cliente ao usar o Amazon DynamoDB sob o Modelo de Responsabilidade Compartilhada da AWS?",
+                "question": "Quais opções são responsabilidade do cliente ao usar o Amazon DynamoDB sob o Modelo de Responsabilidade Compartilhada da AWS? (selecione 2)",
                 "options": [
                     {
                         "option": "Acesso às tabelas do DynamoDB",

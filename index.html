@@ -14,6 +14,12 @@
             align-items: center;
             background-color: #f4f4f9;
             color: #333;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .dark-mode {
+            background-color: #121212;
+            color: #e0e0e0;
         }
 
         h1 {
@@ -21,7 +27,7 @@
             font-size: 2em;
         }
 
-        h2 {
+        h3 {
             margin-top: 0;
         }
 
@@ -48,13 +54,28 @@
             background-color: #e0e0e0;
         }
 
+        .dark-mode button {
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #555;
+        }
+
+        .dark-mode button:hover {
+            background-color: #444;
+        }
+
         #question-container {
             width: 90%;
             max-width: 600px;
-            margin: 20px 0;
+            margin: 10px 20px 20px;
             padding: 20px;
             background-color: #fff;
             border-radius: 10px;
+        }
+
+        .dark-mode #question-container {
+            background-color: #333;
+            color: #e0e0e0;
         }
 
         ul {
@@ -86,6 +107,10 @@
             font-size: 0.9em;
         }
 
+        .dark-mode .correct, .dark-mode .incorrect {
+            color: #333;
+        }
+
         .hidden {
             display: none;
         }
@@ -97,6 +122,43 @@
             padding: 20px;
             background-color: #fff;
             border-radius: 10px;
+        }
+
+        .dark-mode #history-container {
+            background-color: #333;
+            color: #e0e0e0;
+        }
+
+        #history-container div {
+            margin-top: 40px;
+        }
+
+        #clear-history-button {
+            float: right;
+            margin: 5px;
+        }
+
+        #dark-button-container{
+            display: flex;
+            justify-content: flex-end;
+            width: 100%;
+            max-width: 640px;
+            margin: 20px 0 0;
+        }
+
+        #dark-mode-toggle {
+            background-color: #fff;
+            color: #333;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+        }
+        
+        .dark-mode #dark-mode-toggle {
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #555;
         }
 
         @media (max-width: 600px) {
@@ -115,6 +177,10 @@
 
             #question-container, #history-container {
                 padding: 15px;
+            }
+
+            #dark-mode-toggle {
+                margin-right: 10px;
             }
         }
     </style>
@@ -137,12 +203,15 @@
             </select>
         </div>
     </div>
+
+    <div id="dark-button-container">
+        <button id="dark-mode-toggle" onclick="toggleDarkMode()">🌙 Night Mode</button>
+    </div>
+
     <div id="question-container" class="hidden"></div>
     <div id="result-container"></div>
     <button id="show-history-button" class="hidden" onclick="toggleHistory()">Show History</button>
-    <button id="clear-history-button" class="hidden" onclick="clearHistory()">Clear History</button>
     <div id="history-container" class="hidden"></div>
-
     <script>
         let currentQuestion = null;
 
@@ -150,6 +219,7 @@
             loadPreferences();
             displayHistory();
             loadQuestion();
+            applyStoredTheme();
         });
 
         function savePreferences() {
@@ -168,6 +238,30 @@
             }
             if (savedLanguage) {
                 document.getElementById('language').value = savedLanguage;
+            }
+        }
+
+        function applyStoredTheme() {
+            const darkMode = localStorage.getItem('darkMode') === 'true';
+            if (darkMode) {
+                document.body.classList.add('dark-mode');
+                document.getElementById('dark-mode-toggle').textContent = '☀️ Day Mode';
+            } else {
+                document.body.classList.remove('dark-mode');
+                document.getElementById('dark-mode-toggle').textContent = '🌙 Night Mode';
+            }
+        }
+
+        function toggleDarkMode() {
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            if (isDarkMode) {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('darkMode', 'false');
+                document.getElementById('dark-mode-toggle').textContent = '🌙 Night Mode';
+            } else {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('darkMode', 'true');
+                document.getElementById('dark-mode-toggle').textContent = '☀️ Day Mode';
             }
         }
 
@@ -192,7 +286,7 @@
             const container = document.getElementById('question-container');
             container.classList.remove('hidden');
             container.innerHTML = `
-                <h2>${question.question}</h2>
+                <h3>${question.question}</h3>
                 <ul>
                     ${question.options.map((option, index) => `
                         <li>
@@ -248,15 +342,9 @@
             const history = JSON.parse(localStorage.getItem('answerHistory')) || [];
 
             const showHistoryButton = document.getElementById('show-history-button');
-            const clearHistoryButton = document.getElementById('clear-history-button');
 
-            if (history.length > 0) {
-                showHistoryButton.classList.remove('hidden');
-                clearHistoryButton.classList.remove('hidden');
-            } else {
-                showHistoryButton.classList.add('hidden');
-                clearHistoryButton.classList.add('hidden');
-            }
+            if (history.length > 0) showHistoryButton.classList.remove('hidden');
+            else showHistoryButton.classList.add('hidden');
 
             let correctCount = 0;
             let incorrectCount = 0;
@@ -276,7 +364,8 @@
             const incorrectRatio = totalAnswers > 0 ? (incorrectCount / totalAnswers * 100).toFixed(2) : 0;
 
             historyContainer.innerHTML = `
-                <h2>Answer History</h2>
+                <button id="clear-history-button" onclick="clearHistory()">Clear History</button>
+                <h3>Answer History</h3>
                 <p>Correct Answers: ${correctCount} (${correctRatio}%)</p>
                 <p>Incorrect Answers: ${incorrectCount} (${incorrectRatio}%)</p>
             `;
@@ -315,3 +404,4 @@
     </script>
 </body>
 </html>
+    
