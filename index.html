@@ -21,7 +21,7 @@
             font-size: 2em;
         }
 
-        h2 {
+        h3 {
             margin-top: 0;
         }
 
@@ -192,7 +192,7 @@
             const container = document.getElementById('question-container');
             container.classList.remove('hidden');
             container.innerHTML = `
-                <h2>${question.question}</h2>
+                <h3>${question.question}</h3>
                 <ul>
                     ${question.options.map((option, index) => `
                         <li>
@@ -276,7 +276,7 @@
             const incorrectRatio = totalAnswers > 0 ? (incorrectCount / totalAnswers * 100).toFixed(2) : 0;
 
             historyContainer.innerHTML = `
-                <h2>Answer History</h2>
+                <h3>Answer History</h3>
                 <p>Correct Answers: ${correctCount} (${correctRatio}%)</p>
                 <p>Incorrect Answers: ${incorrectCount} (${incorrectRatio}%)</p>
             `;
