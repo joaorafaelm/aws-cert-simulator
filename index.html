@@ -99,6 +99,12 @@
             border-radius: 10px;
         }
 
+        #clear-history-button {
+            float: right;
+            margin: 5px;
+            
+        }
+
         @media (max-width: 600px) {
             h1 {
                 font-size: 1.5em;
@@ -140,7 +146,6 @@
     <div id="question-container" class="hidden"></div>
     <div id="result-container"></div>
     <button id="show-history-button" class="hidden" onclick="toggleHistory()">Show History</button>
-    <button id="clear-history-button" class="hidden" onclick="clearHistory()">Clear History</button>
     <div id="history-container" class="hidden"></div>
 
     <script>
@@ -248,15 +253,9 @@
             const history = JSON.parse(localStorage.getItem('answerHistory')) || [];
 
             const showHistoryButton = document.getElementById('show-history-button');
-            const clearHistoryButton = document.getElementById('clear-history-button');
 
-            if (history.length > 0) {
-                showHistoryButton.classList.remove('hidden');
-                clearHistoryButton.classList.remove('hidden');
-            } else {
-                showHistoryButton.classList.add('hidden');
-                clearHistoryButton.classList.add('hidden');
-            }
+            if (history.length > 0) showHistoryButton.classList.remove('hidden');
+            else showHistoryButton.classList.add('hidden');
 
             let correctCount = 0;
             let incorrectCount = 0;
@@ -276,6 +275,7 @@
             const incorrectRatio = totalAnswers > 0 ? (incorrectCount / totalAnswers * 100).toFixed(2) : 0;
 
             historyContainer.innerHTML = `
+                <button id="clear-history-button" onclick="clearHistory()">Clear History</button>
                 <h3>Answer History</h3>
                 <p>Correct Answers: ${correctCount} (${correctRatio}%)</p>
                 <p>Incorrect Answers: ${incorrectCount} (${incorrectRatio}%)</p>
